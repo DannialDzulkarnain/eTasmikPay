@@ -5,19 +5,63 @@ import Layout from './components/Layout';
 import AdminDashboard from './views/AdminDashboard';
 import UstazDashboard from './views/UstazDashboard';
 import ParentDashboard from './views/ParentDashboard';
+import SettingsView from './views/SettingsView';
+import PaymentView from './views/PaymentView';
 import GeminiAssistant from './components/GeminiAssistant';
 import { ArrowRight, CheckCircle2, ShieldCheck, Users } from 'lucide-react';
 
 const App: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentView, setCurrentView] = useState('dashboard');
 
   const handleLogin = (role: Role) => {
     const user = MOCK_USERS.find(u => u.role === role);
-    if (user) setCurrentUser(user);
+    if (user) {
+      setCurrentUser(user);
+      setCurrentView('dashboard');
+    }
   };
 
   const handleLogout = () => {
     setCurrentUser(null);
+    setCurrentView('dashboard');
+  };
+
+  const renderContent = () => {
+    if (!currentUser) return null;
+
+    if (currentView === 'settings') {
+      return <SettingsView user={currentUser} />;
+    }
+
+    if (currentView === 'payment') {
+      return <PaymentView user={currentUser} />;
+    }
+
+    if (currentView === 'dashboard') {
+      switch (currentUser.role) {
+        case Role.ADMIN: return <AdminDashboard />;
+        case Role.USTAZ: return <UstazDashboard />;
+        case Role.PARENT: return <ParentDashboard />;
+      }
+    }
+
+    // Placeholder for other views
+    return (
+      <div className="flex flex-col items-center justify-center h-[50vh] text-slate-400">
+        <div className="p-4 bg-slate-100 rounded-full mb-4">
+           <ShieldCheck className="w-8 h-8" />
+        </div>
+        <h2 className="text-xl font-semibold text-slate-600">Halaman Sedang Dibangunkan</h2>
+        <p>Maaf, halaman ini belum tersedia dalam versi demo.</p>
+        <button 
+          onClick={() => setCurrentView('dashboard')} 
+          className="mt-4 text-primary-600 font-medium hover:underline"
+        >
+          Kembali ke Dashboard
+        </button>
+      </div>
+    );
   };
 
   // Landing Page (Login Simulation)
@@ -86,10 +130,13 @@ const App: React.FC = () => {
   }
 
   return (
-    <Layout user={currentUser} onLogout={handleLogout}>
-      {currentUser.role === Role.ADMIN && <AdminDashboard />}
-      {currentUser.role === Role.USTAZ && <UstazDashboard />}
-      {currentUser.role === Role.PARENT && <ParentDashboard />}
+    <Layout 
+      user={currentUser} 
+      onLogout={handleLogout} 
+      currentView={currentView}
+      onNavigate={setCurrentView}
+    >
+      {renderContent()}
       <GeminiAssistant userRole={currentUser.role} />
     </Layout>
   );

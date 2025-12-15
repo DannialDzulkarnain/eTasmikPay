@@ -6,19 +6,30 @@ interface LayoutProps {
   children: React.ReactNode;
   user: User;
   onLogout: () => void;
+  currentView: string;
+  onNavigate: (view: string) => void;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, user, onLogout }) => {
+const Layout: React.FC<LayoutProps> = ({ children, user, onLogout, currentView, onNavigate }) => {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
-  const NavItem = ({ icon: Icon, label, active = false }: { icon: any, label: string, active?: boolean }) => (
-    <div className={`flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer transition-colors ${active ? 'bg-primary-50 text-primary-700 font-medium' : 'text-slate-600 hover:bg-slate-50'}`}>
-      <Icon className={`w-5 h-5 ${active ? 'text-primary-600' : 'text-slate-400'}`} />
-      <span>{label}</span>
-    </div>
-  );
+  const NavItem = ({ icon: Icon, label, viewId }: { icon: any, label: string, viewId: string }) => {
+    const isActive = currentView === viewId;
+    return (
+      <button 
+        onClick={() => {
+          onNavigate(viewId);
+          setIsSidebarOpen(false);
+        }}
+        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer transition-colors ${isActive ? 'bg-primary-50 text-primary-700 font-medium' : 'text-slate-600 hover:bg-slate-50'}`}
+      >
+        <Icon className={`w-5 h-5 ${isActive ? 'text-primary-600' : 'text-slate-400'}`} />
+        <span>{label}</span>
+      </button>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
@@ -31,18 +42,18 @@ const Layout: React.FC<LayoutProps> = ({ children, user, onLogout }) => {
       <aside className={`fixed lg:static inset-y-0 left-0 w-64 bg-white border-r border-slate-200 z-50 transform transition-transform duration-200 lg:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="h-full flex flex-col">
           {/* Logo */}
-          <div className="p-6 border-b border-slate-100 flex items-center gap-2">
+          <div className="p-6 border-b border-slate-100 flex items-center gap-2 cursor-pointer" onClick={() => onNavigate('dashboard')}>
             <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-primary-500/30">e</div>
             <span className="font-bold text-xl text-slate-800 tracking-tight">TasmikPay</span>
           </div>
 
           {/* Nav */}
           <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-            <NavItem icon={LayoutDashboard} label="Dashboard" active />
-            {user.role === Role.ADMIN && <NavItem icon={Users} label="Pengguna" />}
-            {user.role === Role.PARENT && <NavItem icon={Users} label="Anak-Anak" />}
-            <NavItem icon={CreditCard} label="Pembayaran" />
-            <NavItem icon={Settings} label="Tetapan" />
+            <NavItem icon={LayoutDashboard} label="Dashboard" viewId="dashboard" />
+            {user.role === Role.ADMIN && <NavItem icon={Users} label="Pengguna" viewId="users" />}
+            {user.role === Role.PARENT && <NavItem icon={Users} label="Anak-Anak" viewId="users" />}
+            <NavItem icon={CreditCard} label="Pembayaran" viewId="payment" />
+            <NavItem icon={Settings} label="Tetapan" viewId="settings" />
           </nav>
 
           {/* User Profile */}

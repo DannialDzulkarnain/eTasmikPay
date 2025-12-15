@@ -105,3 +105,8 @@ export const RECENT_PAYMENTS = [
   { id: 'pay2', studentId: 's2', amount: 60, date: '2023-10-01', status: 'PAID', method: 'QR' },
   { id: 'pay3', studentId: 's1', amount: 45, date: '2023-10-26', status: 'PENDING', method: undefined },
 ];
+
+export const MOCK_WITHDRAWALS = [
+  { id: 'w1', ustazId: 'u1', amount: 150, date: '2023-09-30', status: 'COMPLETED' },
+  { id: 'w2', ustazId: 'u1', amount: 200, date: '2023-10-15', status: 'PENDING' },
+];

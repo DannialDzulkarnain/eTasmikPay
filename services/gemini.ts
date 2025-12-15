@@ -1,26 +1,8 @@
 import { GoogleGenAI } from "@google/genai";
 
-// Helper to retrieve API key safely for both Vite (Vercel) and Playground environments
-const getApiKey = (): string => {
-  const candidates = [
-    // Vite-style env (browser build)
-    () => (typeof import.meta !== 'undefined' && (import.meta as any)?.env?.VITE_GEMINI_API_KEY) as string | undefined,
-    () => (typeof import.meta !== 'undefined' && (import.meta as any)?.env?.VITE_API_KEY) as string | undefined,
-    // Node-style env (server / playground)
-    () => (typeof process !== 'undefined' && process.env?.GEMINI_API_KEY) as string | undefined,
-    () => (typeof process !== 'undefined' && process.env?.API_KEY) as string | undefined,
-  ];
-
-  for (const getter of candidates) {
-    const value = getter();
-    if (value) return value;
-  }
-
-  return '';
-};
-
-const apiKey = getApiKey();
-const ai = new GoogleGenAI({ apiKey });
+// Initialize the GoogleGenAI client with the API key from process.env.API_KEY.
+// This follows the strict guideline to use process.env.API_KEY directly.
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const getGeminiResponse = async (prompt: string, roleContext: string): Promise<string> => {
   try {

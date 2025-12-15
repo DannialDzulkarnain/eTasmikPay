@@ -21,11 +21,11 @@ export const Button: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement> & { 
   );
 };
 
-export const Card: React.FC<{ children: React.ReactNode, className?: string, title?: string, action?: React.ReactNode }> = ({ children, className = '', title, action }) => (
+export const Card: React.FC<{ children: React.ReactNode, className?: string, title?: React.ReactNode, action?: React.ReactNode }> = ({ children, className = '', title, action }) => (
   <div className={`bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden ${className}`}>
     {(title || action) && (
       <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-        {title && <h3 className="font-semibold text-slate-800">{title}</h3>}
+        {title && <h3 className="font-semibold text-slate-800 flex items-center gap-2">{title}</h3>}
         {action && <div>{action}</div>}
       </div>
     )}

@@ -1,4 +1,4 @@
-import { PaymentModel, Role, SchoolConfig, Session, Student, User } from './types';
+import { Payment, PaymentModel, Role, SchoolConfig, Session, Student, User } from './types';
 
 export const DEMO_SCHOOL_CONFIG: SchoolConfig = {
   name: "Madrasah Al-Hikmah",
@@ -100,10 +100,10 @@ export const MOCK_SESSIONS: Session[] = [
   }
 ];
 
-export const RECENT_PAYMENTS = [
-  { id: 'pay1', studentId: 's1', amount: 60, date: '2023-10-01', status: 'PAID', method: 'FPX' },
-  { id: 'pay2', studentId: 's2', amount: 60, date: '2023-10-01', status: 'PAID', method: 'QR' },
-  { id: 'pay3', studentId: 's1', amount: 45, date: '2023-10-26', status: 'PENDING', method: undefined },
+export const RECENT_PAYMENTS: Payment[] = [
+  { id: 'pay1', studentId: 's1', parentId: 'p1', amount: 60, date: '2023-10-01', status: 'PAID', method: 'FPX' },
+  { id: 'pay2', studentId: 's2', parentId: 'p1', amount: 60, date: '2023-10-01', status: 'PAID', method: 'QR' },
+  { id: 'pay3', studentId: 's1', parentId: 'p1', amount: 45, date: '2023-10-26', status: 'PENDING' },
 ];
 
 export const MOCK_WITHDRAWALS = [

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Card, Badge, Button } from '../components/UI';
-import { MOCK_USERS, RECENT_PAYMENTS, DEMO_SCHOOL_CONFIG, MOCK_STUDENTS } from '../constants';
 import { Users, BookOpen, DollarSign, Settings, Download, Search } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Card, Badge, Button } from '../../components/ui/index';
+import { DEMO_SCHOOL_CONFIG, MOCK_STUDENTS, MOCK_USERS, RECENT_PAYMENTS } from '../../data/mockData';
+import { formatCurrency } from '../../lib/format';
+import { Role } from '../../types';
 
 const data = [
   { name: 'Jan', revenue: 4000 },
@@ -66,7 +68,7 @@ const AdminDashboard: React.FC = () => {
             </div>
             <div>
               <p className="text-sm text-slate-500 font-medium">Kutipan Yuran</p>
-              <h4 className="text-2xl font-bold text-slate-800">RM 12,450</h4>
+              <h4 className="text-2xl font-bold text-slate-800">{formatCurrency(12450)}</h4>
             </div>
           </div>
         </Card>
@@ -102,7 +104,7 @@ const AdminDashboard: React.FC = () => {
                     <p className="text-xs text-slate-500">{pay.date}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-bold text-primary-600">RM {pay.amount}</p>
+                    <p className="text-sm font-bold text-primary-600">{formatCurrency(pay.amount)}</p>
                     <Badge variant={pay.status === 'PAID' ? 'success' : 'warning'}>{pay.status}</Badge>
                   </div>
                 </div>
@@ -189,7 +191,7 @@ const AdminDashboard: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {MOCK_USERS.filter(u => u.role === 'USTAZ').map(u => (
+              {MOCK_USERS.filter(u => u.role === Role.USTAZ).map(u => (
                 <tr key={u.id} className="hover:bg-slate-50/50">
                   <td className="px-4 py-3 flex items-center gap-3">
                     <img src={u.avatar} alt="" className="w-8 h-8 rounded-full" />

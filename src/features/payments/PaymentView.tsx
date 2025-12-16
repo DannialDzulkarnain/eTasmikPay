@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { User, Role } from '../types';
-import { Card, Button, Badge, Input } from '../components/UI';
-import { MOCK_SESSIONS, RECENT_PAYMENTS, MOCK_USERS, MOCK_WITHDRAWALS, MOCK_STUDENTS } from '../constants';
-import { CreditCard, Wallet, ArrowUpRight, ArrowDownLeft, Calendar, Download, DollarSign, CheckCircle, Clock, XCircle, Banknote, Landmark, QrCode } from 'lucide-react';
+import { CreditCard, Wallet, ArrowUpRight, ArrowDownLeft, Download, DollarSign, CheckCircle, Clock, XCircle, Banknote, Landmark, QrCode } from 'lucide-react';
+import { Card, Button, Badge, Input } from '../../components/ui/index';
+import { MOCK_SESSIONS, RECENT_PAYMENTS, MOCK_USERS, MOCK_WITHDRAWALS, MOCK_STUDENTS } from '../../data/mockData';
+import { formatCurrency, formatDate } from '../../lib/format';
+import { Role, User } from '../../types';
 
 interface PaymentViewProps {
   user: User;
@@ -65,18 +66,18 @@ const PaymentView: React.FC<PaymentViewProps> = ({ user }) => {
               <div className="flex justify-between items-start">
                  <div>
                     <p className="text-blue-100 font-medium text-sm">Baki Boleh Keluar</p>
-                    <h3 className="text-3xl font-bold mt-1">RM {currentBalance.toFixed(2)}</h3>
+                    <h3 className="text-3xl font-bold mt-1">{formatCurrency(currentBalance)}</h3>
                  </div>
                  <div className="bg-white/20 p-2 rounded-lg"><DollarSign className="w-6 h-6 text-white" /></div>
               </div>
               <div className="mt-4 pt-4 border-t border-white/20 flex gap-4 text-xs text-blue-100">
                  <div>
                     <span className="block opacity-70">Sedang Proses</span>
-                    <span className="font-semibold text-white">RM {pendingWithdrawal.toFixed(2)}</span>
+                    <span className="font-semibold text-white">{formatCurrency(pendingWithdrawal)}</span>
                  </div>
                  <div>
                     <span className="block opacity-70">Jumlah Dibayar</span>
-                    <span className="font-semibold text-white">RM {totalWithdrawn.toFixed(2)}</span>
+                    <span className="font-semibold text-white">{formatCurrency(totalWithdrawn)}</span>
                  </div>
               </div>
            </Card>
@@ -115,14 +116,14 @@ const PaymentView: React.FC<PaymentViewProps> = ({ user }) => {
                     <tbody className="divide-y divide-slate-100">
                         {myWithdrawals.map(w => (
                             <tr key={w.id}>
-                                <td className="px-4 py-3 text-slate-600">{w.date}</td>
+                                <td className="px-4 py-3 text-slate-600">{formatDate(w.date)}</td>
                                 <td className="px-4 py-3">
                                    <span className="flex items-center gap-1 text-amber-600 font-medium">
                                       <ArrowUpRight className="w-3 h-3" /> Pengeluaran
                                    </span>
                                 </td>
                                 <td className="px-4 py-3 text-slate-600">Pindahan ke Bank Islam</td>
-                                <td className="px-4 py-3 text-right font-medium text-slate-800">- RM {w.amount}</td>
+                                <td className="px-4 py-3 text-right font-medium text-slate-800">- {formatCurrency(w.amount)}</td>
                                 <td className="px-4 py-3">
                                     <Badge variant={w.status === 'COMPLETED' ? 'success' : 'warning'}>{w.status}</Badge>
                                 </td>
@@ -130,14 +131,14 @@ const PaymentView: React.FC<PaymentViewProps> = ({ user }) => {
                         ))}
                         {mySessions.map(s => (
                             <tr key={s.id}>
-                                <td className="px-4 py-3 text-slate-600">{s.date}</td>
+                                <td className="px-4 py-3 text-slate-600">{formatDate(s.date)}</td>
                                 <td className="px-4 py-3">
                                    <span className="flex items-center gap-1 text-green-600 font-medium">
                                       <ArrowDownLeft className="w-3 h-3" /> Pendapatan
                                    </span>
                                 </td>
                                 <td className="px-4 py-3 text-slate-600">Sesi: {s.surah}</td>
-                                <td className="px-4 py-3 text-right font-medium text-slate-800">+ RM {s.fee}</td>
+                                <td className="px-4 py-3 text-right font-medium text-slate-800">+ {formatCurrency(s.fee)}</td>
                                 <td className="px-4 py-3"><Badge variant="success">SELESAI</Badge></td>
                             </tr>
                         ))}
@@ -216,9 +217,9 @@ const PaymentView: React.FC<PaymentViewProps> = ({ user }) => {
                           <tr key={pay.id}>
                              <td className="px-4 py-3 font-mono text-xs text-slate-500">#{pay.id}</td>
                              <td className="px-4 py-3 text-slate-700 font-medium">Pelajar {pay.studentId}</td>
-                             <td className="px-4 py-3 text-slate-600">{pay.date}</td>
+                             <td className="px-4 py-3 text-slate-600">{formatDate(pay.date)}</td>
                              <td className="px-4 py-3 text-slate-600">{pay.method || '-'}</td>
-                             <td className="px-4 py-3 text-right font-medium text-slate-800">RM {pay.amount}</td>
+                             <td className="px-4 py-3 text-right font-medium text-slate-800">{formatCurrency(pay.amount)}</td>
                              <td className="px-4 py-3"><Badge variant={pay.status === 'PAID' ? 'success' : 'warning'}>{pay.status}</Badge></td>
                           </tr>
                        ))}
@@ -236,16 +237,16 @@ const PaymentView: React.FC<PaymentViewProps> = ({ user }) => {
                                 <div className={`p-2 rounded-full ${w.status === 'PENDING' ? 'bg-amber-100 text-amber-600' : 'bg-green-100 text-green-600'}`}>
                                    <Banknote className="w-5 h-5" />
                                 </div>
-                                <div>
+                               <div>
                                    <h4 className="font-semibold text-slate-800">{ustaz?.name}</h4>
-                                   <p className="text-xs text-slate-500">Dihantar: {w.date}</p>
-                                </div>
-                             </div>
-                             <div className="text-right flex items-center gap-4">
-                                <div>
-                                   <p className="font-bold text-slate-800">RM {w.amount}</p>
+                                   <p className="text-xs text-slate-500">Dihantar: {formatDate(w.date)}</p>
+                               </div>
+                            </div>
+                            <div className="text-right flex items-center gap-4">
+                               <div>
+                                   <p className="font-bold text-slate-800">{formatCurrency(w.amount)}</p>
                                    <span className={`text-xs font-medium ${w.status === 'PENDING' ? 'text-amber-600' : 'text-green-600'}`}>{w.status}</span>
-                                </div>
+                               </div>
                                 {w.status === 'PENDING' && (
                                    <div className="flex gap-2">
                                       <Button variant="ghost" className="text-red-600 hover:bg-red-50 p-2 h-auto"><XCircle className="w-5 h-5" /></Button>
@@ -265,7 +266,9 @@ const PaymentView: React.FC<PaymentViewProps> = ({ user }) => {
 
   // --- PARENT VIEW LOGIC ---
   const myStudents = MOCK_STUDENTS.filter(s => s.parentId === user.id);
-  const mySessions = MOCK_SESSIONS.filter(s => myStudents.find(stu => stu.id === s.studentId));
+  const myStudentIds = myStudents.map((s) => s.id);
+  const primaryStudentName = myStudents[0]?.name ?? 'Anak anda';
+  const demoInvoiceAmount = 45;
   
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
@@ -283,11 +286,11 @@ const PaymentView: React.FC<PaymentViewProps> = ({ user }) => {
                      <div className="p-2 bg-white rounded-full text-amber-500 shadow-sm"><Clock className="w-5 h-5" /></div>
                      <div>
                         <h4 className="font-bold text-slate-800">Yuran Oktober 2023</h4>
-                        <p className="text-sm text-slate-600">Ahmad bin Razak • 3 Sesi</p>
+                        <p className="text-sm text-slate-600">{primaryStudentName} • 3 Sesi</p>
                      </div>
                   </div>
                   <div className="flex items-center gap-4 w-full sm:w-auto">
-                     <span className="font-bold text-xl text-slate-800">RM 45.00</span>
+                     <span className="font-bold text-xl text-slate-800">{formatCurrency(demoInvoiceAmount)}</span>
                      <Button className="flex-1 sm:flex-none" onClick={() => setShowPaymentModal(true)}>Bayar Sekarang</Button>
                   </div>
                </div>
@@ -305,11 +308,11 @@ const PaymentView: React.FC<PaymentViewProps> = ({ user }) => {
                         </tr>
                      </thead>
                      <tbody className="divide-y divide-slate-100">
-                        {RECENT_PAYMENTS.filter(p => p.status === 'PAID').map(p => (
+                        {RECENT_PAYMENTS.filter(p => p.status === 'PAID' && myStudentIds.includes(p.studentId)).map(p => (
                            <tr key={p.id}>
-                              <td className="px-4 py-3 text-slate-600">{p.date}</td>
+                              <td className="px-4 py-3 text-slate-600">{formatDate(p.date)}</td>
                               <td className="px-4 py-3 font-medium text-slate-700">Yuran Bulanan</td>
-                              <td className="px-4 py-3 text-right">RM {p.amount}</td>
+                              <td className="px-4 py-3 text-right">{formatCurrency(p.amount)}</td>
                               <td className="px-4 py-3 text-center">
                                  <button className="text-primary-600 hover:text-primary-800"><Download className="w-4 h-4 mx-auto" /></button>
                               </td>
@@ -351,7 +354,7 @@ const PaymentView: React.FC<PaymentViewProps> = ({ user }) => {
                 
                 <div className="bg-slate-50 p-4 rounded-lg mb-6 flex justify-between items-center">
                     <span className="text-slate-600 font-medium">Jumlah Perlu Dibayar</span>
-                    <span className="text-2xl font-bold text-slate-800">RM 45.00</span>
+                    <span className="text-2xl font-bold text-slate-800">{formatCurrency(demoInvoiceAmount)}</span>
                 </div>
 
                 <form onSubmit={handlePaymentProcess} className="space-y-4">
@@ -388,7 +391,7 @@ const PaymentView: React.FC<PaymentViewProps> = ({ user }) => {
 
                     <div className="pt-4">
                         <Button type="submit" className="w-full py-3" isLoading={isProcessing}>
-                           {isProcessing ? 'Sedang Memproses...' : `Bayar RM 45.00 Sekarang`}
+                           {isProcessing ? 'Sedang Memproses...' : `Bayar ${formatCurrency(demoInvoiceAmount)} Sekarang`}
                         </Button>
                         <p className="text-center text-xs text-slate-400 mt-3 flex items-center justify-center gap-1">
                            <CheckCircle className="w-3 h-3" /> Transaksi selamat & disulitkan

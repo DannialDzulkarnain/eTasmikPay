@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { User, Role, SchoolConfig } from '../types';
-import { Card, Button, Input, Badge } from '../components/UI';
-import { DEMO_SCHOOL_CONFIG } from '../constants';
-import { Save, Bell, Lock, User as UserIcon, Building, CreditCard, ToggleLeft } from 'lucide-react';
+import { Save, Bell, Lock, User as UserIcon, Building } from 'lucide-react';
+import { Card, Button, Input, Badge } from '../../components/ui/index';
+import { DEMO_SCHOOL_CONFIG } from '../../data/mockData';
+import { Role, SchoolConfig, User } from '../../types';
 
 interface SettingsViewProps {
   user: User;

@@ -1,17 +1,29 @@
 import React, { useState } from 'react';
-import { Card, Button, Badge } from '../components/UI';
-import { MOCK_STUDENTS, MOCK_SESSIONS, RECENT_PAYMENTS } from '../constants';
-import { ArrowUpRight, BookOpen, Calendar, CreditCard, Trophy } from 'lucide-react';
+import { BookOpen, Calendar, CreditCard, Trophy } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { Card, Button, Badge } from '../../components/ui/index';
+import { MOCK_STUDENTS, MOCK_SESSIONS } from '../../data/mockData';
+import { formatCurrency, formatDate } from '../../lib/format';
 
 const ParentDashboard: React.FC = () => {
-  const myStudents = MOCK_STUDENTS.filter(s => s.parentId === 'p1');
-  const [selectedChild, setSelectedChild] = useState(myStudents[0].id);
+  const myStudents = MOCK_STUDENTS.filter((s) => s.parentId === 'p1');
+  const [selectedChild, setSelectedChild] = useState<string>(myStudents[0]?.id ?? '');
 
-  const currentStudent = myStudents.find(s => s.id === selectedChild) || myStudents[0];
-  const sessions = MOCK_SESSIONS.filter(s => s.studentId === currentStudent.id);
+  const currentStudent = myStudents.find((s) => s.id === selectedChild) || myStudents[0] || null;
+  const sessions = currentStudent ? MOCK_SESSIONS.filter((s) => s.studentId === currentStudent.id) : [];
   
   const outstandingAmount = 45; // Simulated
+
+  if (!currentStudent) {
+    return (
+      <div className="space-y-4">
+        <h1 className="text-2xl font-bold text-slate-800">Kemajuan Anak Anda</h1>
+        <Card>
+          <p className="text-slate-600">Tiada anak yang dihubungkan ke akaun demo ini. Tambah pelajar baharu atau hubungi pentadbir untuk pautan.</p>
+        </Card>
+      </div>
+    );
+  }
 
   const data = [
     { name: 'Completed', value: currentStudent.progress },
@@ -62,7 +74,7 @@ const ParentDashboard: React.FC = () => {
                     startAngle={90}
                     endAngle={-270}
                   >
-                    {data.map((entry, index) => (
+                    {data.map((_, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
@@ -103,16 +115,16 @@ const ParentDashboard: React.FC = () => {
         <Card className="bg-slate-900 text-white border-none flex flex-col justify-between">
            <div>
               <h3 className="font-semibold text-slate-300 mb-1">Yuran Tertunggak</h3>
-              <p className="text-4xl font-bold text-white mb-6">RM {outstandingAmount}</p>
+              <p className="text-4xl font-bold text-white mb-6">{formatCurrency(outstandingAmount)}</p>
               
               <div className="space-y-3">
                  <div className="flex justify-between text-sm text-slate-400 border-b border-white/10 pb-2">
                     <span>Oktober 2023 (Sesi)</span>
-                    <span className="text-white">RM 30.00</span>
+                    <span className="text-white">{formatCurrency(30)}</span>
                  </div>
                  <div className="flex justify-between text-sm text-slate-400 border-b border-white/10 pb-2">
                     <span>Oktober 2023 (Tambahan)</span>
-                    <span className="text-white">RM 15.00</span>
+                    <span className="text-white">{formatCurrency(15)}</span>
                  </div>
               </div>
            </div>
@@ -128,24 +140,24 @@ const ParentDashboard: React.FC = () => {
 
       {/* History */}
       <Card title="Sejarah Sesi & Transaksi">
-         <div className="space-y-4">
-            {sessions.slice(0, 3).map(sess => (
-               <div key={sess.id} className="flex items-center justify-between p-4 border border-slate-100 rounded-lg bg-slate-50/50">
-                  <div className="flex items-center gap-3">
-                     <div className="p-2 bg-white border border-slate-200 rounded-lg shadow-sm text-slate-600">
-                        <Calendar className="w-5 h-5" />
+               <div className="space-y-4">
+                  {sessions.slice(0, 3).map(sess => (
+                     <div key={sess.id} className="flex items-center justify-between p-4 border border-slate-100 rounded-lg bg-slate-50/50">
+                        <div className="flex items-center gap-3">
+                           <div className="p-2 bg-white border border-slate-200 rounded-lg shadow-sm text-slate-600">
+                              <Calendar className="w-5 h-5" />
+                           </div>
+                           <div>
+                              <p className="font-semibold text-slate-800">Sesi Hafazan - {sess.surah}</p>
+                              <p className="text-xs text-slate-500">{formatDate(sess.date)} • {sess.durationMinutes} minit</p>
+                           </div>
+                        </div>
+                        <div className="text-right">
+                           <span className="block font-medium text-slate-700">{formatCurrency(sess.fee)}</span>
+                           <Badge variant="success">Selesai</Badge>
+                        </div>
                      </div>
-                     <div>
-                        <p className="font-semibold text-slate-800">Sesi Hafazan - {sess.surah}</p>
-                        <p className="text-xs text-slate-500">{sess.date} • {sess.durationMinutes} minit</p>
-                     </div>
-                  </div>
-                  <div className="text-right">
-                     <span className="block font-medium text-slate-700">RM {sess.fee}</span>
-                     <Badge variant="success">Selesai</Badge>
-                  </div>
-               </div>
-            ))}
+                  ))}
          </div>
       </Card>
     </div>

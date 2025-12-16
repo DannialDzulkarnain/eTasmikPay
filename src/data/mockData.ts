@@ -1,4 +1,4 @@
-import { Payment, PaymentModel, Role, SchoolConfig, Session, Student, User } from './types';
+import { Payment, PaymentModel, Role, SchoolConfig, Session, Student, User } from '../types';
 
 export const DEMO_SCHOOL_CONFIG: SchoolConfig = {
   name: "Madrasah Al-Hikmah",

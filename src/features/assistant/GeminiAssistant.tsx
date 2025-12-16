@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, Send, X, Sparkles, User, Bot } from 'lucide-react';
-import { getGeminiResponse } from '../services/gemini';
-import { Button } from './UI';
-import { Role } from '../types';
+import { Send, X, Sparkles, User, Bot } from 'lucide-react';
+import { getGeminiResponse } from '../../lib/gemini';
+import { Role } from '../../types';
 
 interface Message {
   id: string;

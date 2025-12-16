@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Card, Button, Input, Select, Badge } from '../components/UI';
-import { MOCK_STUDENTS, MOCK_SESSIONS, DEMO_SCHOOL_CONFIG } from '../constants';
-import { Session, Student } from '../types';
 import { PlusCircle, Clock, Book, CheckCircle, TrendingUp, AlertCircle } from 'lucide-react';
+import { Card, Button, Input, Select } from '../../components/ui/index';
+import { DEMO_SCHOOL_CONFIG, MOCK_SESSIONS, MOCK_STUDENTS } from '../../data/mockData';
+import { formatCurrency } from '../../lib/format';
 
 const UstazDashboard: React.FC = () => {
   const [showNewSession, setShowNewSession] = useState(false);
@@ -106,7 +106,8 @@ const UstazDashboard: React.FC = () => {
           <div className="flex justify-between items-start mb-4">
             <div>
               <p className="text-primary-100 font-medium text-sm">Jumlah Pendapatan (Bulan Ini)</p>
-              <h3 className="text-3xl font-bold mt-1">RM {totalEarnings}</h3>
+              <h3 className="text-3xl font-bold mt-1">{formatCurrency(totalEarnings)}</h3>
+              <p className="text-sm text-primary-100 mt-1">Kadar demo: {formatCurrency(DEMO_SCHOOL_CONFIG.rates.perSession || 0)} / sesi</p>
             </div>
             <div className="bg-white/20 p-2 rounded-lg"><TrendingUp className="w-6 h-6 text-white" /></div>
           </div>
@@ -165,7 +166,7 @@ const UstazDashboard: React.FC = () => {
                       </div>
                     </div>
                     <div className="text-right pl-11 sm:pl-0">
-                      <div className="font-bold text-slate-700">RM {session.fee}</div>
+                      <div className="font-bold text-slate-700">{formatCurrency(session.fee)}</div>
                       <span className="text-xs text-slate-400">{session.date}</span>
                     </div>
                   </div>

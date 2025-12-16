@@ -1,6 +1,6 @@
 import React from 'react';
-import { User, Role } from '../types';
 import { LogOut, LayoutDashboard, Users, CreditCard, Settings, Menu, X } from 'lucide-react';
+import { Role, User } from '../../types';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -10,7 +10,7 @@ interface LayoutProps {
   onNavigate: (view: string) => void;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, user, onLogout, currentView, onNavigate }) => {
+const AppLayout: React.FC<LayoutProps> = ({ children, user, onLogout, currentView, onNavigate }) => {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
@@ -96,4 +96,4 @@ const Layout: React.FC<LayoutProps> = ({ children, user, onLogout, currentView, 
   );
 };
 
-export default Layout;
+export default AppLayout;
